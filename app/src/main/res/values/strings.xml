@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PutAWeather</string>
+    <string name="openweathermap_key">50c53309251827771718be75b8f13074</string>
 </resources>
