@@ -67,13 +67,32 @@ public class WeatherService {
         if(cities > 50) cities = 50;
         if(cities < 1) cities = 1;
 
-        WeatherService service = new WeatherService(context);
         WeatherParameter[] parameters = new WeatherParameter[] {
                 new WeatherParameter("lat", latitude),
                 new WeatherParameter("lon", longitude),
                 new WeatherParameter("cnt", Integer.toString(cities))
         };
-        service.makeRequest(WeatherRequestType.FIND, (response) -> {
+
+        makeRequest(WeatherRequestType.FIND, (response) -> {
+            try {
+                JSONObject json = new JSONObject(response);
+                onResponse.accept(json);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }, parameters);
+    }
+
+    /**
+     * Calls a request to locate a specific city by its id
+     * @param id The ID of the city to locate
+     * @param onResponse The consumer executed upon receiving the JSON data
+     */
+    public void requestCityById(int id, Consumer<JSONObject> onResponse) {
+        WeatherParameter[] parameters = new WeatherParameter[] {
+                new WeatherParameter("id", Integer.toString(id))
+        };
+        makeRequest(WeatherRequestType.WEATHER, (response) -> {
             try {
                 JSONObject json = new JSONObject(response);
                 onResponse.accept(json);
