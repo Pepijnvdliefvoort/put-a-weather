@@ -6,8 +6,11 @@ import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
 
 import com.funiculifunicula.putaweather.MainActivity;
+import com.funiculifunicula.putaweather.utility.LocationUtility;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 
 public class MapReadyCallback implements OnMapReadyCallback {
     private final MainActivity activity;
@@ -28,6 +31,11 @@ public class MapReadyCallback implements OnMapReadyCallback {
 
         map.getUiSettings().setMyLocationButtonEnabled(true);
         map.setMyLocationEnabled(true);
+
+        LatLng currentLatLng = LocationUtility.getCurrentLocation(activity);
+        if(currentLatLng != null) {
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 8));
+        }
 
         map.setOnMapClickListener(latLng -> activity.getOverviewFragment().updateRecyclerView(latLng));
     }

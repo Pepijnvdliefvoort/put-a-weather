@@ -23,6 +23,7 @@ import com.funiculifunicula.putaweather.R;
 import com.funiculifunicula.putaweather.openweathermap.WeatherService;
 import com.funiculifunicula.putaweather.overviewrecycler.OverviewItem;
 import com.funiculifunicula.putaweather.overviewrecycler.OverviewRecyclerAdapter;
+import com.funiculifunicula.putaweather.utility.LocationUtility;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
@@ -67,17 +68,9 @@ public class OverviewFragment extends Fragment {
         recyclerAdapter.notifyItemRangeRemoved(0, oldContentSize);
 
         if (latLng == null) {
-            if (
-                    ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                    ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(getActivity(), new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION }, 1);
+            if((latLng = LocationUtility.getCurrentLocation(getActivity())) == null) {
                 return;
             }
-
-            LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            latLng = new LatLng(location.getLatitude(), location.getLongitude());
         }
 
         WeatherService weatherService = new WeatherService(getActivity());
