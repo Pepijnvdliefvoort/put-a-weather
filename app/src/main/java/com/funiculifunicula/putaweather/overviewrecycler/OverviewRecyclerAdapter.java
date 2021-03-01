@@ -33,6 +33,7 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<OverviewViewHo
         holder.getLocationNameView().setText(item.getLocationName());
         holder.getWeatherStateIconView().setImageDrawable(item.getWeatherStateIcon());
         holder.getTemperatureView().setText(item.getTemperature() + " °C");
+        holder.getCountryIcon().setImageDrawable(item.getCountryIcon());
     }
 
     @Override

@@ -29,4 +29,8 @@ public class OverviewViewHolder extends RecyclerView.ViewHolder {
     public TextView getTemperatureView() {
         return view.findViewById(R.id.overview_item_temperature);
     }
+
+    public ImageView getCountryIcon() {
+        return view.findViewById(R.id.overview_item_countryIcon);
+    }
 }

@@ -1,4 +1,4 @@
-package com.funiculifunicula.putaweather.openweathermap;
+package com.funiculifunicula.putaweather.rest.openweathermap;
 
 import android.content.Context;
 import android.graphics.Bitmap;

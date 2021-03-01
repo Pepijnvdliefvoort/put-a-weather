@@ -1,10 +1,5 @@
 package com.funiculifunicula.putaweather.fragments;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,14 +8,14 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.funiculifunicula.putaweather.R;
-import com.funiculifunicula.putaweather.openweathermap.WeatherService;
+import com.funiculifunicula.putaweather.rest.countryflags.CountryFlagsService;
+import com.funiculifunicula.putaweather.rest.openweathermap.WeatherService;
 import com.funiculifunicula.putaweather.overviewrecycler.OverviewItem;
 import com.funiculifunicula.putaweather.overviewrecycler.OverviewRecyclerAdapter;
 import com.funiculifunicula.putaweather.utility.LocationUtility;
@@ -74,6 +69,8 @@ public class OverviewFragment extends Fragment {
         }
 
         WeatherService weatherService = new WeatherService(getActivity());
+        CountryFlagsService countryFlagsService = new CountryFlagsService(getActivity());
+
         weatherService.requestCitiesInCircle(Double.toString(latLng.latitude), Double.toString(latLng.longitude), 50, json -> {
             try {
                 JSONArray citiesJson = json.getJSONArray("list");
@@ -89,6 +86,9 @@ public class OverviewFragment extends Fragment {
 
                     String iconName = city.getJSONArray("weather").getJSONObject(0).getString("icon");
                     weatherService.getWeatherIcon(iconName, overviewItem::setWeatherStateIcon);
+
+                    String countryCode = city.getJSONObject("sys").getString("country");
+                    countryFlagsService.getCountryFlag(countryCode, overviewItem::setCountryIcon);
                 }
 
                 recyclerAdapter.notifyDataSetChanged();

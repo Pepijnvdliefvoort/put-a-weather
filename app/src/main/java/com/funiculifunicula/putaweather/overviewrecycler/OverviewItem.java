@@ -10,6 +10,7 @@ public class OverviewItem {
     private final String locationName;
     private final double temperature;
     private Drawable weatherStateIcon;
+    private Drawable countryIcon;
 
     public OverviewItem(RecyclerView.Adapter<OverviewViewHolder> adapter, String locationName, double temperature) {
         this.adapter = adapter;
@@ -35,12 +36,22 @@ public class OverviewItem {
         return weatherStateIcon;
     }
 
+    public void setCountryIcon(Drawable drawable) {
+        countryIcon = drawable;
+        adapter.notifyDataSetChanged();
+    }
+
+    public Drawable getCountryIcon() {
+        return countryIcon;
+    }
+
     @Override
     public String toString() {
         return "OverviewItem{" +
-                "locationName='" + locationName + '\'' +
+                ", locationName='" + locationName + '\'' +
                 ", temperature=" + temperature +
                 ", weatherStateIcon=" + weatherStateIcon +
+                ", countryIcon=" + countryIcon +
                 '}';
     }
 }
