@@ -3,19 +3,19 @@ package com.funiculifunicula.putaweather.fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,6 +32,7 @@ import org.json.JSONObject;
 public class OverviewFragment extends Fragment {
     private View view;
 
+    private RecyclerView recyclerView;
     private OverviewRecyclerAdapter recyclerAdapter;
 
     @Nullable
@@ -46,15 +47,24 @@ public class OverviewFragment extends Fragment {
 
     private void initializeRecyclerView() {
         recyclerAdapter = new OverviewRecyclerAdapter();
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
         updateRecyclerView(null);
     }
 
     public void updateRecyclerView(LatLng latLng) {
+        recyclerView.smoothScrollToPosition(0);
+
+        ProgressBar loader = view.findViewById(R.id.overview_loader);
+        loader.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.INVISIBLE);
+
+        int oldContentSize = recyclerAdapter.getItemCount();
         recyclerAdapter.clear();
+        recyclerAdapter.notifyItemRangeRemoved(0, oldContentSize);
 
         if (latLng == null) {
             if (
@@ -89,6 +99,9 @@ public class OverviewFragment extends Fragment {
                 }
 
                 recyclerAdapter.notifyDataSetChanged();
+
+                loader.setVisibility(View.INVISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

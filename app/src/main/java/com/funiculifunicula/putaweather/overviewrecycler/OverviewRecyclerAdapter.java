@@ -1,6 +1,5 @@
 package com.funiculifunicula.putaweather.overviewrecycler;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OverviewRecyclerAdapter extends RecyclerView.Adapter<OverviewViewHolder> {
-    public final List<OverviewItem> list;
+    private final List<OverviewItem> list;
 
     public OverviewRecyclerAdapter() {
         list = new ArrayList<>();
