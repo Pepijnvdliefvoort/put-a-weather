@@ -5,16 +5,25 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.funiculifunicula.putaweather.dialogs.ErrorDialog;
+import com.funiculifunicula.putaweather.fragments.MapFragment;
+import com.funiculifunicula.putaweather.fragments.OverviewFragment;
 
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
+    private OverviewFragment overviewFragment;
+    private MapFragment mapFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        overviewFragment = (OverviewFragment) getSupportFragmentManager().findFragmentById(R.id.overviewFragment);
+        mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
     }
 
     @Override
@@ -32,5 +41,13 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
         }
+    }
+
+    public OverviewFragment getOverviewFragment() {
+        return overviewFragment;
+    }
+
+    public MapFragment getMapFragment() {
+        return mapFragment;
     }
 }

@@ -1,5 +1,6 @@
 package com.funiculifunicula.putaweather.overviewrecycler;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OverviewRecyclerAdapter extends RecyclerView.Adapter<OverviewViewHolder> {
-    private List<OverviewItem> list;
+    public final List<OverviewItem> list;
 
     public OverviewRecyclerAdapter() {
         list = new ArrayList<>();
@@ -30,7 +31,9 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<OverviewViewHo
     public void onBindViewHolder(@NonNull OverviewViewHolder holder, int position) {
         OverviewItem item = list.get(position);
 
-        holder.getTitleView().setText(item.getTitle());
+        holder.getLocationNameView().setText(item.getLocationName());
+        holder.getWeatherStateIconView().setImageDrawable(item.getWeatherStateIcon());
+        holder.getTemperatureView().setText(item.getTemperature() + " °C");
     }
 
     @Override
@@ -40,5 +43,9 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<OverviewViewHo
 
     public void add(OverviewItem item) {
         list.add(item);
+    }
+
+    public void clear() {
+        list.clear();
     }
 }

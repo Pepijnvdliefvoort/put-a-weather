@@ -1,6 +1,7 @@
 package com.funiculifunicula.putaweather.overviewrecycler;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,7 +18,15 @@ public class OverviewViewHolder extends RecyclerView.ViewHolder {
         this.view = itemView;
     }
 
-    public TextView getTitleView() {
-        return view.findViewById(R.id.overview_item_title);
+    public TextView getLocationNameView() {
+        return view.findViewById(R.id.overview_item_locationName);
+    }
+
+    public ImageView getWeatherStateIconView() {
+        return view.findViewById(R.id.overview_item_weatherStateIcon);
+    }
+
+    public TextView getTemperatureView() {
+        return view.findViewById(R.id.overview_item_temperature);
     }
 }
