@@ -1,5 +1,6 @@
 package com.funiculifunicula.putaweather.fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,8 @@ import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 public class OverviewFragment extends Fragment {
     private View view;
@@ -62,36 +65,46 @@ public class OverviewFragment extends Fragment {
         recyclerAdapter.clear();
         recyclerAdapter.notifyItemRangeRemoved(0, oldContentSize);
 
-        if (latLng == null) {
-            if((latLng = LocationUtility.getCurrentLocation(getActivity())) == null) {
-                return;
-            }
-        }
+        Runnable task = () -> {
+            LatLng latLngFinal = latLng;
 
-        WeatherService weatherService = new WeatherService(getActivity());
-
-        weatherService.requestCitiesInCircle(Double.toString(latLng.latitude), Double.toString(latLng.longitude), 50, json -> {
-            try {
-                JSONArray citiesJson = json.getJSONArray("list");
-
-                for(int i = 0; i < citiesJson.length(); i++) {
-                    JSONObject city = citiesJson.getJSONObject(i);
-
-                    String locationName = city.getString("name");
-                    double temperature = city.getJSONObject("main").getDouble("temp");
-                    String iconName = city.getJSONArray("weather").getJSONObject(0).getString("icon");
-                    String countryCode = city.getJSONObject("sys").getString("country");
-
-                    OverviewItem overviewItem = new OverviewItem(recyclerAdapter, locationName, temperature, iconName, countryCode);
-                    recyclerAdapter.add(overviewItem);
-                    recyclerAdapter.notifyItemInserted(recyclerAdapter.getItemCount() - 1);
+            if (latLngFinal == null) {
+                if((latLngFinal = LocationUtility.getCurrentLocation(getActivity())) == null) {
+                    return;
                 }
-
-                loader.setVisibility(View.INVISIBLE);
-                recyclerView.setVisibility(View.VISIBLE);
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
-        });
+
+            WeatherService weatherService = new WeatherService(getActivity());
+
+            weatherService.requestCitiesInCircle(Double.toString(latLngFinal.latitude), Double.toString(latLngFinal.longitude), 50, json -> {
+                try {
+                    JSONArray citiesJson = json.getJSONArray("list");
+
+                    for(int i = 0; i < citiesJson.length(); i++) {
+                        JSONObject city = citiesJson.getJSONObject(i);
+
+                        String locationName = city.getString("name");
+                        double temperature = city.getJSONObject("main").getDouble("temp");
+                        String iconName = city.getJSONArray("weather").getJSONObject(0).getString("icon");
+                        String countryCode = city.getJSONObject("sys").getString("country");
+
+                        OverviewItem overviewItem = new OverviewItem(recyclerAdapter, locationName, temperature, iconName, countryCode);
+                        recyclerAdapter.add(overviewItem);
+                    }
+
+                    recyclerAdapter.notifyItemRangeInserted(0, recyclerAdapter.getItemCount());
+
+                    getActivity().runOnUiThread(() -> {
+                        loader.setVisibility(View.INVISIBLE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            });
+        };
+
+        Thread thread = new Thread(task);
+        thread.start();
     }
 }
