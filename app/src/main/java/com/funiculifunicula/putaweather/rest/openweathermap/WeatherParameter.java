@@ -1,4 +1,4 @@
-package com.funiculifunicula.putaweather.openweathermap;
+package com.funiculifunicula.putaweather.rest.openweathermap;
 
 public class WeatherParameter {
     private String name;

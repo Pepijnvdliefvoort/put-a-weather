@@ -1,0 +1,47 @@
+package com.funiculifunicula.putaweather.overviewrecycler;
+
+import androidx.recyclerview.widget.RecyclerView;
+
+public class OverviewItem {
+    private final RecyclerView.Adapter<OverviewViewHolder> adapter;
+
+    private final String locationName;
+    private final double temperature;
+    private final String weatherStateIcon;
+    private final String countryIcon;
+
+    public OverviewItem(RecyclerView.Adapter<OverviewViewHolder> adapter, String locationName, double temperature, String weatherStateIcon, String countryIcon) {
+        this.adapter = adapter;
+
+        this.locationName = locationName;
+        this.temperature = temperature;
+        this.weatherStateIcon = weatherStateIcon;
+        this.countryIcon = countryIcon;
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public double getTemperature() {
+        return temperature;
+    }
+
+    public String getWeatherStateIcon() {
+        return weatherStateIcon;
+    }
+
+    public String getCountryIcon() {
+        return countryIcon;
+    }
+
+    @Override
+    public String toString() {
+        return "OverviewItem{" +
+                ", locationName='" + locationName + '\'' +
+                ", temperature=" + temperature +
+                ", weatherStateIcon=" + weatherStateIcon +
+                ", countryIcon=" + countryIcon +
+                '}';
+    }
+}
