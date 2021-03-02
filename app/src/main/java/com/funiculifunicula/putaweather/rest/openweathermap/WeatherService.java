@@ -111,17 +111,17 @@ public class WeatherService {
     }
 
     /**
-     * Creates a {@link Drawable} from an image, indicating the weather state, by making an async request to the OpenWeatherMap API
+     * Creates a {@link Bitmap} from an image, indicating the weather state, by making an async request to the OpenWeatherMap API
      *
      * @param icon      The name of the weather state icon to retrieve
      * @param onSuccess The consumer to be performed upon completion of retrieving the icon
      */
-    public void getWeatherIcon(String icon, Consumer<Drawable> onSuccess) {
-        String url = String.format("https://openweathermap.org/img/wn/%s@2x.png", icon);
+    public void getWeatherIcon(String icon, Consumer<Bitmap> onSuccess) {
+        String url = "https://openweathermap.org/img/wn/" + icon + "@2x.png";
 
         ImageRequest request = new ImageRequest(
                 url,
-                response -> onSuccess.accept(new BitmapDrawable(context.getResources(), response)),
+                onSuccess::accept,
                 100,
                 100,
                 ImageView.ScaleType.CENTER,

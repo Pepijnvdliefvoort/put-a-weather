@@ -1,7 +1,5 @@
 package com.funiculifunicula.putaweather.overviewrecycler;
 
-import android.graphics.drawable.Drawable;
-
 import androidx.recyclerview.widget.RecyclerView;
 
 public class OverviewItem {
@@ -9,14 +7,16 @@ public class OverviewItem {
 
     private final String locationName;
     private final double temperature;
-    private Drawable weatherStateIcon;
-    private Drawable countryIcon;
+    private final String weatherStateIcon;
+    private final String countryIcon;
 
-    public OverviewItem(RecyclerView.Adapter<OverviewViewHolder> adapter, String locationName, double temperature) {
+    public OverviewItem(RecyclerView.Adapter<OverviewViewHolder> adapter, String locationName, double temperature, String weatherStateIcon, String countryIcon) {
         this.adapter = adapter;
 
         this.locationName = locationName;
         this.temperature = temperature;
+        this.weatherStateIcon = weatherStateIcon;
+        this.countryIcon = countryIcon;
     }
 
     public String getLocationName() {
@@ -27,21 +27,11 @@ public class OverviewItem {
         return temperature;
     }
 
-    public void setWeatherStateIcon(Drawable drawable) {
-        weatherStateIcon = drawable;
-        adapter.notifyDataSetChanged();
-    }
-
-    public Drawable getWeatherStateIcon() {
+    public String getWeatherStateIcon() {
         return weatherStateIcon;
     }
 
-    public void setCountryIcon(Drawable drawable) {
-        countryIcon = drawable;
-        adapter.notifyDataSetChanged();
-    }
-
-    public Drawable getCountryIcon() {
+    public String getCountryIcon() {
         return countryIcon;
     }
 

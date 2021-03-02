@@ -42,7 +42,7 @@ public class OverviewFragment extends Fragment {
     }
 
     private void initializeRecyclerView() {
-        recyclerAdapter = new OverviewRecyclerAdapter();
+        recyclerAdapter = new OverviewRecyclerAdapter(getContext());
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -69,7 +69,6 @@ public class OverviewFragment extends Fragment {
         }
 
         WeatherService weatherService = new WeatherService(getActivity());
-        CountryFlagsService countryFlagsService = new CountryFlagsService(getActivity());
 
         weatherService.requestCitiesInCircle(Double.toString(latLng.latitude), Double.toString(latLng.longitude), 50, json -> {
             try {
@@ -80,18 +79,13 @@ public class OverviewFragment extends Fragment {
 
                     String locationName = city.getString("name");
                     double temperature = city.getJSONObject("main").getDouble("temp");
-
-                    OverviewItem overviewItem = new OverviewItem(recyclerAdapter, locationName, temperature);
-                    recyclerAdapter.add(overviewItem);
-
                     String iconName = city.getJSONArray("weather").getJSONObject(0).getString("icon");
-                    weatherService.getWeatherIcon(iconName, overviewItem::setWeatherStateIcon);
-
                     String countryCode = city.getJSONObject("sys").getString("country");
-                    countryFlagsService.getCountryFlag(countryCode, overviewItem::setCountryIcon);
-                }
 
-                recyclerAdapter.notifyDataSetChanged();
+                    OverviewItem overviewItem = new OverviewItem(recyclerAdapter, locationName, temperature, iconName, countryCode);
+                    recyclerAdapter.add(overviewItem);
+                    recyclerAdapter.notifyItemInserted(recyclerAdapter.getItemCount() - 1);
+                }
 
                 loader.setVisibility(View.INVISIBLE);
                 recyclerView.setVisibility(View.VISIBLE);

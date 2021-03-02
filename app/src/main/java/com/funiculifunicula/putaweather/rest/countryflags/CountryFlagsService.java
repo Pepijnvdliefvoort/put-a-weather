@@ -2,8 +2,6 @@ package com.funiculifunicula.putaweather.rest.countryflags;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import com.android.volley.RequestQueue;
@@ -19,12 +17,18 @@ public class CountryFlagsService {
         this.context = context;
     }
 
-    public void getCountryFlag(String countryCode, Consumer<Drawable> onSuccess) {
-        String url = String.format("https://www.countryflags.io/%s/flat/64.png", countryCode.toLowerCase());
+    /**
+     * Creates a {@link Bitmap} by making an async request to the Country Flags API
+     *
+     * @param countryCode The string value of the country to retrieve
+     * @param onSuccess   The consumer to be performed upon completion of retrieving the country flag image
+     */
+    public void getCountryFlag(String countryCode, Consumer<Bitmap> onSuccess) {
+        String url = "https://www.countryflags.io/" + countryCode.toLowerCase() + "/flat/64.png";
 
         ImageRequest request = new ImageRequest(
                 url,
-                response -> onSuccess.accept(new BitmapDrawable(context.getResources(), response)),
+                onSuccess::accept,
                 64,
                 64,
                 ImageView.ScaleType.CENTER,
