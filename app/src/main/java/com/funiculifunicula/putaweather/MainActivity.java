@@ -39,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
                     ErrorDialog errorDialog = new ErrorDialog(R.string.error_required_permission_not_granted);
                     errorDialog.show(getSupportFragmentManager(), ErrorDialog.TAG);
                 }
+
+                break;
+            default:
                 break;
         }
     }
