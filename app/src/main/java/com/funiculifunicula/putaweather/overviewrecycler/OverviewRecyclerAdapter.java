@@ -1,11 +1,11 @@
 package com.funiculifunicula.putaweather.overviewrecycler;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.funiculifunicula.putaweather.R;
@@ -16,11 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OverviewRecyclerAdapter extends RecyclerView.Adapter<OverviewViewHolder> {
-    private final Context context;
+    private final AppCompatActivity activity;
     private final List<OverviewItem> list;
 
-    public OverviewRecyclerAdapter(Context context) {
-        this.context = context;
+    public OverviewRecyclerAdapter(AppCompatActivity activity) {
+        this.activity = activity;
         list = new ArrayList<>();
     }
 
@@ -38,12 +38,12 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<OverviewViewHo
         holder.getLocationNameView().setText(item.getLocationName());
         holder.getTemperatureView().setText(item.getTemperature() + " °C");
 
-        WeatherService weatherService = new WeatherService(context);
+        WeatherService weatherService = new WeatherService(activity);
         weatherService.getWeatherIcon(item.getWeatherStateIcon(), image -> {
             holder.getWeatherStateIconView().setImageBitmap(image);
         });
 
-        CountryFlagsService countryFlagsService = new CountryFlagsService(context);
+        CountryFlagsService countryFlagsService = new CountryFlagsService(activity);
         countryFlagsService.getCountryFlag(item.getCountryIcon(), image -> {
             holder.getCountryIcon().setImageBitmap(image);
         });

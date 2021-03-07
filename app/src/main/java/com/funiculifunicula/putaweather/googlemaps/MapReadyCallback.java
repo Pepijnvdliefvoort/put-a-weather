@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
 
 import com.funiculifunicula.putaweather.MainActivity;
+import com.funiculifunicula.putaweather.R;
+import com.funiculifunicula.putaweather.dialogs.ErrorDialog;
 import com.funiculifunicula.putaweather.exceptions.LastKnownLocationNotFoundException;
 import com.funiculifunicula.putaweather.utility.LocationUtility;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -40,7 +42,8 @@ public class MapReadyCallback implements OnMapReadyCallback {
             }
         }
         catch(LastKnownLocationNotFoundException e) {
-            e.printStackTrace();
+            ErrorDialog errorDialog = new ErrorDialog(R.string.error_upon_retrieving_location);
+            errorDialog.show(activity.getSupportFragmentManager());
         }
 
         map.setOnMapClickListener(latLng -> activity.getOverviewFragment().updateRecyclerView(latLng));
