@@ -10,9 +10,9 @@
     <string name="weather_label">Weersomstandigheden</string>
     <string name="temperature_label">Temperatuur</string>
     <string name="temperature_feels_like_label">Temperatuur voelt als</string>
-    <string name="temperature_min">Minimale temperatuur</string>
-    <string name="temperature_max">Maximale temperatuur</string>
-    <string name="temperature_visibility">Zicht</string>
-    <string name="temperature_clouds">Bewolkt</string>
-    <string name="temperature_humidity">Luchtvochtigheid</string>
+    <string name="temperature_min_label">Minimale temperatuur</string>
+    <string name="temperature_max_label">Maximale temperatuur</string>
+    <string name="temperature_visibility_label">Zicht</string>
+    <string name="temperature_clouds_label">Bewolkt</string>
+    <string name="temperature_humidity_label">Luchtvochtigheid</string>
 </resources>
