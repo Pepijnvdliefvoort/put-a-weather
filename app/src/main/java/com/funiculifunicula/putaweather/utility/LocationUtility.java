@@ -9,7 +9,10 @@ import android.location.LocationManager;
 
 import androidx.core.app.ActivityCompat;
 
+import com.funiculifunicula.putaweather.exceptions.LastKnownLocationNotFoundException;
 import com.google.android.gms.maps.model.LatLng;
+
+import java.util.List;
 
 public class LocationUtility {
     /**
@@ -17,8 +20,9 @@ public class LocationUtility {
      *
      * @param activity The activity the app is running on to check for permissions
      * @return The latitude and longitude in a {@link LatLng} object. Returns {@code null} if the required permissions were denied by the user after being prompted to grant access to the permissions.
+     * @throws LastKnownLocationNotFoundException Thrown when the last known location could not be found using the GPS provider(s)
      */
-    public static LatLng getCurrentLocation(Activity activity) {
+    public static LatLng getCurrentLocation(Activity activity) throws LastKnownLocationNotFoundException {
         if (
                 ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                         ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -28,7 +32,29 @@ public class LocationUtility {
         }
 
         LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        return new LatLng(location.getLatitude(), location.getLongitude());
+        if(locationManager == null) {
+            throw new LastKnownLocationNotFoundException();
+        }
+
+        List<String> providers = locationManager.getProviders(true);
+        Location preciseLocation = null;
+
+        for(String provider : providers) {
+            Location location = locationManager.getLastKnownLocation(provider);
+
+            if(location == null) {
+                continue;
+            }
+
+            if(preciseLocation == null || location.getAccuracy() < preciseLocation.getAccuracy()) {
+                preciseLocation = location;
+            }
+        }
+
+        if(preciseLocation == null) {
+            throw new LastKnownLocationNotFoundException();
+        }
+
+        return new LatLng(preciseLocation.getLatitude(), preciseLocation.getLongitude());
     }
 }
