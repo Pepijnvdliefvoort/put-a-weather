@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.funiculifunicula.putaweather.dialogs.ErrorDialog;
 import com.funiculifunicula.putaweather.fragments.MapFragment;
@@ -37,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(getIntent());
                 } else {
                     ErrorDialog errorDialog = new ErrorDialog(R.string.error_required_permission_not_granted);
-                    errorDialog.show(getSupportFragmentManager(), ErrorDialog.TAG);
+                    errorDialog.show(getSupportFragmentManager());
                 }
 
                 break;

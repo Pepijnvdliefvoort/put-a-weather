@@ -3,6 +3,8 @@
     <string name="openweathermap_key">50c53309251827771718be75b8f13074</string>
     <string name="mapsApiKey">AIzaSyB4n16pfOaHQ5yR9lTtVkMe22jh07FmLYI</string>
     <string name="error_required_permission_not_granted">Required permission not granted. Please restart the app and try again by allowing the required permission.</string>
+    <string name="error_upon_retrieving_weather">Fout bij het ophalen van de weersverwachting</string>
+    <string name="error_upon_retrieving_location">Fout bij het ophalen van de locatie</string>
     <string name="dialog_button_ok">Ok</string>
     <string name="dialog_title_error">Error</string>
 </resources>
