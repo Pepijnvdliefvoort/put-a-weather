@@ -15,4 +15,5 @@
     <string name="temperature_visibility_label">Zicht</string>
     <string name="temperature_clouds_label">Bewolkt</string>
     <string name="temperature_humidity_label">Luchtvochtigheid</string>
+    <string name="clouds_label">bewolkt</string>
 </resources>

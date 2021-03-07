@@ -51,7 +51,7 @@ public class DetailActivity extends AppCompatActivity {
                 visibility.setText((Integer.parseInt(json.getString("visibility")) / 1000) + "km");
 
                 TextView clouds = findViewById(R.id.detailWeatherCloudsValue);
-                clouds.setText(json.getJSONObject("clouds").getString("all") + "% bewolkt");
+                clouds.setText(json.getJSONObject("clouds").getString("all") + "% " + getResources().getString(R.string.clouds_label));
 
                 String weatherDescription = json.getJSONArray("weather").getJSONObject(0).getString("description");
                 TextView cloudsDescription = findViewById(R.id.detailWeatherCloudsDescriptionValue);
