@@ -5,7 +5,12 @@
     <string name="error_required_permission_not_granted">Required permission not granted. Please restart the app and try again by allowing the required permission.</string>
     <string name="dialog_button_ok">Ok</string>
     <string name="dialog_title_error">Error</string>
-    <string name="weather_label">Weer</string>
+    <string name="weather_label">Weersomstandigheden</string>
     <string name="temperature_label">Temperatuur</string>
     <string name="temperature_feels_like_label">Temperatuur voelt als</string>
+    <string name="temperature_min">Minimale temperatuur</string>
+    <string name="temperature_max">Maximale temperatuur</string>
+    <string name="temperature_visibility">Zicht</string>
+    <string name="temperature_clouds">Bewolkt</string>
+    <string name="temperature_humidity">Luchtvochtigheid</string>
 </resources>

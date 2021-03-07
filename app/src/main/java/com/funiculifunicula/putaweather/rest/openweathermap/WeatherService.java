@@ -43,7 +43,7 @@ public class WeatherService {
         requestUrl.append(requestType.name().toLowerCase());
 
         // Base parameters
-        requestUrl.append("?appid=").append(key).append("&units=metric");
+        requestUrl.append("?appid=").append(key).append("&units=metric").append("&lang=nl");
 
         // Parse parameters
         if (parameters != null) {
