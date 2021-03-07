@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.funiculifunicula.putaweather.R;
+import com.funiculifunicula.putaweather.exceptions.LastKnownLocationNotFoundException;
 import com.funiculifunicula.putaweather.rest.countryflags.CountryFlagsService;
 import com.funiculifunicula.putaweather.rest.openweathermap.WeatherService;
 import com.funiculifunicula.putaweather.overviewrecycler.OverviewItem;
@@ -69,9 +70,14 @@ public class OverviewFragment extends Fragment {
             LatLng latLngFinal = latLng;
 
             if (latLngFinal == null) {
-                if((latLngFinal = LocationUtility.getCurrentLocation(getActivity())) == null) {
-                    return;
-                }
+               try {
+                   if((latLngFinal = LocationUtility.getCurrentLocation(getActivity())) == null) {
+                       return;
+                   }
+               }
+               catch(LastKnownLocationNotFoundException e) {
+                   e.printStackTrace();
+               }
             }
 
             WeatherService weatherService = new WeatherService(getActivity());
