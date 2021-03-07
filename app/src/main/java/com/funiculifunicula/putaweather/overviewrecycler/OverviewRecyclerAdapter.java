@@ -47,6 +47,8 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<OverviewViewHo
         countryFlagsService.getCountryFlag(item.getCountryIcon(), image -> {
             holder.getCountryIcon().setImageBitmap(image);
         });
+
+        holder.attachClickListener(activity, item.getCityId());
     }
 
     @Override

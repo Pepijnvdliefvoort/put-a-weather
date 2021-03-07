@@ -1,12 +1,16 @@
 package com.funiculifunicula.putaweather.overviewrecycler;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.funiculifunicula.putaweather.DetailActivity;
 import com.funiculifunicula.putaweather.R;
 
 public class OverviewViewHolder extends RecyclerView.ViewHolder {
@@ -32,5 +36,13 @@ public class OverviewViewHolder extends RecyclerView.ViewHolder {
 
     public ImageView getCountryIcon() {
         return view.findViewById(R.id.overview_item_countryIcon);
+    }
+
+    public void attachClickListener(Activity activity, int cityId) {
+        itemView.setOnClickListener(view -> {
+            Intent intent = new Intent(activity, DetailActivity.class);
+            intent.putExtra("cityId", cityId);
+            activity.startActivity(intent);
+        });
     }
 }

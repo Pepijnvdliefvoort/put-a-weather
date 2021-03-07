@@ -100,6 +100,7 @@ public class WeatherService {
      *
      * @param id         The ID of the city to locate
      * @param onResponse The consumer executed upon receiving the JSON data
+     * @param onError    The consumer error
      */
     public void requestCityById(int id, Consumer<JSONObject> onResponse, Consumer<VolleyError> onError) {
         WeatherParameter[] parameters = new WeatherParameter[]{
