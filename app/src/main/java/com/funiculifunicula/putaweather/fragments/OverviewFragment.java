@@ -1,6 +1,5 @@
 package com.funiculifunicula.putaweather.fragments;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,24 +8,24 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.funiculifunicula.putaweather.R;
-import com.funiculifunicula.putaweather.rest.countryflags.CountryFlagsService;
-import com.funiculifunicula.putaweather.rest.openweathermap.WeatherService;
+import com.funiculifunicula.putaweather.dialogs.ErrorDialog;
+import com.funiculifunicula.putaweather.exceptions.LastKnownLocationNotFoundException;
 import com.funiculifunicula.putaweather.overviewrecycler.OverviewItem;
 import com.funiculifunicula.putaweather.overviewrecycler.OverviewRecyclerAdapter;
+import com.funiculifunicula.putaweather.rest.openweathermap.WeatherService;
 import com.funiculifunicula.putaweather.utility.LocationUtility;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.List;
 
 public class OverviewFragment extends Fragment {
     private View view;
@@ -45,7 +44,7 @@ public class OverviewFragment extends Fragment {
     }
 
     private void initializeRecyclerView() {
-        recyclerAdapter = new OverviewRecyclerAdapter(getContext());
+        recyclerAdapter = new OverviewRecyclerAdapter((AppCompatActivity) getActivity());
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -69,12 +68,17 @@ public class OverviewFragment extends Fragment {
             LatLng latLngFinal = latLng;
 
             if (latLngFinal == null) {
-                if((latLngFinal = LocationUtility.getCurrentLocation(getActivity())) == null) {
-                    return;
-                }
+               try {
+                   if((latLngFinal = LocationUtility.getCurrentLocation(getActivity())) == null) {
+                       return;
+                   }
+               } catch(LastKnownLocationNotFoundException e) {
+                   ErrorDialog errorDialog = new ErrorDialog(R.string.error_upon_retrieving_location);
+                   errorDialog.show(getFragmentManager());
+               }
             }
 
-            WeatherService weatherService = new WeatherService(getActivity());
+            WeatherService weatherService = new WeatherService((AppCompatActivity) getActivity());
 
             weatherService.requestCitiesInCircle(Double.toString(latLngFinal.latitude), Double.toString(latLngFinal.longitude), 50, json -> {
                 try {
@@ -92,19 +96,23 @@ public class OverviewFragment extends Fragment {
                         recyclerAdapter.add(overviewItem);
                     }
 
-                    recyclerAdapter.notifyItemRangeInserted(0, recyclerAdapter.getItemCount());
+                    resetLoading(loader);
 
-                    getActivity().runOnUiThread(() -> {
-                        loader.setVisibility(View.INVISIBLE);
-                        recyclerView.setVisibility(View.VISIBLE);
-                    });
+                    recyclerAdapter.notifyItemRangeInserted(0, recyclerAdapter.getItemCount());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            });
+            }, error -> resetLoading(loader));
         };
 
         Thread thread = new Thread(task);
         thread.start();
+    }
+
+    private void resetLoading(ProgressBar loader) {
+        getActivity().runOnUiThread(() -> {
+            loader.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
+        });
     }
 }

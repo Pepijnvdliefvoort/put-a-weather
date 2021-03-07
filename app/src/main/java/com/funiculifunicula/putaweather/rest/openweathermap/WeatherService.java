@@ -1,18 +1,18 @@
 package com.funiculifunicula.putaweather.rest.openweathermap;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.funiculifunicula.putaweather.R;
+import com.funiculifunicula.putaweather.dialogs.ErrorDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,12 +20,12 @@ import org.json.JSONObject;
 import java.util.function.Consumer;
 
 public class WeatherService {
-    private final Context context;
+    private final AppCompatActivity activity;
     private final String key;
 
-    public WeatherService(Context context) {
-        this.context = context;
-        key = context.getString(R.string.openweathermap_key);
+    public WeatherService(AppCompatActivity activity) {
+        this.activity = activity;
+        key = activity.getString(R.string.openweathermap_key);
     }
 
     /**
@@ -33,9 +33,10 @@ public class WeatherService {
      *
      * @param requestType The type of request to make, used to identify the route used on the OpenWeatherMap API
      * @param onSuccess   The consumer executed upon successfully executing the request
+     * @param onError     The consumer executed upon an error occurs
      * @param parameters  The parameters to append to the request made
      */
-    private void makeRequest(WeatherRequestType requestType, Consumer<String> onSuccess, WeatherParameter... parameters) {
+    private void makeRequest(WeatherRequestType requestType, Consumer<String> onSuccess, Consumer<VolleyError> onError, WeatherParameter... parameters) {
         // Base URL
         StringBuilder requestUrl = new StringBuilder("https://api.openweathermap.org/data/2.5/");
 
@@ -56,9 +57,13 @@ public class WeatherService {
                 Request.Method.GET,
                 requestUrl.toString(),
                 onSuccess::accept,
-                error -> Toast.makeText(context, "Fout bij het ophalen van de weersverwachting", Toast.LENGTH_LONG).show());
+                error -> {
+                    ErrorDialog errorDialog = new ErrorDialog(R.string.error_upon_retrieving_weather);
+                    errorDialog.show(activity.getSupportFragmentManager());
+                    onError.accept(error);
+                });
 
-        RequestQueue queue = Volley.newRequestQueue(context);
+        RequestQueue queue = Volley.newRequestQueue(activity);
         queue.add(request);
     }
 
@@ -70,7 +75,7 @@ public class WeatherService {
      * @param cities     Number of cities around the point that should be returned. The maximum is 50.
      * @param onResponse The consumer executed upon receiving the JSON data
      */
-    public void requestCitiesInCircle(String latitude, String longitude, int cities, Consumer<JSONObject> onResponse) {
+    public void requestCitiesInCircle(String latitude, String longitude, int cities, Consumer<JSONObject> onResponse, Consumer<VolleyError> onError) {
         if (cities > 50) cities = 50;
         if (cities < 1) cities = 1;
 
@@ -87,7 +92,7 @@ public class WeatherService {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }, parameters);
+        }, onError, parameters);
     }
 
     /**
@@ -96,7 +101,7 @@ public class WeatherService {
      * @param id         The ID of the city to locate
      * @param onResponse The consumer executed upon receiving the JSON data
      */
-    public void requestCityById(int id, Consumer<JSONObject> onResponse) {
+    public void requestCityById(int id, Consumer<JSONObject> onResponse, Consumer<VolleyError> onError) {
         WeatherParameter[] parameters = new WeatherParameter[]{
                 new WeatherParameter("id", Integer.toString(id))
         };
@@ -107,7 +112,7 @@ public class WeatherService {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }, parameters);
+        }, onError, parameters);
     }
 
     /**
@@ -134,7 +139,7 @@ public class WeatherService {
                     }
                 });
 
-        RequestQueue queue = Volley.newRequestQueue(context);
+        RequestQueue queue = Volley.newRequestQueue(activity);
         queue.add(request);
     }
 }

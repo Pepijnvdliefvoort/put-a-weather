@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.funiculifunicula.putaweather.R;
 
@@ -32,5 +33,9 @@ public class ErrorDialog extends DialogFragment {
                 });
 
         return builder.create();
+    }
+
+    public void show(@NonNull FragmentManager manager) {
+        super.show(manager, TAG);
     }
 }
