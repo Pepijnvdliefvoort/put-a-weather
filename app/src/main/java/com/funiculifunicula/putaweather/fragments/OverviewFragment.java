@@ -87,12 +87,13 @@ public class OverviewFragment extends Fragment {
                     for(int i = 0; i < citiesJson.length(); i++) {
                         JSONObject city = citiesJson.getJSONObject(i);
 
+                        int cityId = city.getInt("id");
                         String locationName = city.getString("name");
                         double temperature = city.getJSONObject("main").getDouble("temp");
                         String iconName = city.getJSONArray("weather").getJSONObject(0).getString("icon");
                         String countryCode = city.getJSONObject("sys").getString("country");
 
-                        OverviewItem overviewItem = new OverviewItem(recyclerAdapter, locationName, temperature, iconName, countryCode);
+                        OverviewItem overviewItem = new OverviewItem(recyclerAdapter, cityId, locationName, temperature, iconName, countryCode);
                         recyclerAdapter.add(overviewItem);
                     }
 

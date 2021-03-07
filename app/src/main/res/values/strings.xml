@@ -7,4 +7,13 @@
     <string name="error_upon_retrieving_location">Fout bij het ophalen van de locatie</string>
     <string name="dialog_button_ok">Ok</string>
     <string name="dialog_title_error">Error</string>
+    <string name="weather_label">Weersomstandigheden</string>
+    <string name="temperature_label">Temperatuur</string>
+    <string name="temperature_feels_like_label">Temperatuur voelt als</string>
+    <string name="temperature_min_label">Minimale temperatuur</string>
+    <string name="temperature_max_label">Maximale temperatuur</string>
+    <string name="temperature_visibility_label">Zicht</string>
+    <string name="temperature_clouds_label">Bewolkt</string>
+    <string name="temperature_humidity_label">Luchtvochtigheid</string>
+    <string name="clouds_label">bewolkt</string>
 </resources>
