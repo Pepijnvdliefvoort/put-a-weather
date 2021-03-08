@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -76,6 +77,14 @@ public class DetailActivity extends AppCompatActivity {
 
     private void bindButtonListeners() {
         Button viewOnMapButton = findViewById(R.id.view_on_map_button);
+
+        String googleMapsPackageName = "com.google.android.apps.maps";
+        if(getPackageManager().getInstalledApplications(0).stream()
+                .noneMatch(applicationInfo -> applicationInfo.packageName.equals(googleMapsPackageName))) {
+            viewOnMapButton.setVisibility(View.INVISIBLE);
+            return;
+        }
+
         viewOnMapButton.setOnClickListener(v -> {
             if(latLng == null) {
                 return;
@@ -83,7 +92,7 @@ public class DetailActivity extends AppCompatActivity {
 
             Uri googleMapsUri = Uri.parse(String.format("google.streetview:cbll=%s,%s", latLng.longitude, latLng.latitude));
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, googleMapsUri);
-            mapIntent.setPackage("com.google.android.apps.maps");
+            mapIntent.setPackage(googleMapsPackageName);
             startActivity(mapIntent);
         });
     }
