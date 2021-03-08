@@ -19,4 +19,5 @@
     <string name="action_preferences">Achtergrond wijzigen</string>
     <string name="action_background">Achtergrond aan/uit</string>
     <string name="action_image">Afbeelding kiezen...</string>
+    <string name="view_on_map">Tonen op kaart</string>
 </resources>

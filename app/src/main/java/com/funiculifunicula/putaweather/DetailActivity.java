@@ -15,15 +15,24 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.funiculifunicula.putaweather.fragments.SettingsFragment;
 import com.funiculifunicula.putaweather.rest.openweathermap.WeatherService;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
 
 public class DetailActivity extends AppCompatActivity {
+    private LatLng latLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,15 +43,24 @@ public class DetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null) {
-            return;
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        actionBar.setDisplayHomeAsUpEnabled(true);
 
+        bindWeatherInformation();
+        bindButtonListeners();
+    }
+
+    private void bindWeatherInformation() {
         WeatherService weatherService = new WeatherService(this);
 
         weatherService.requestCityById(getIntent().getExtras().getInt("cityId"), json -> {
             try {
+                JSONObject coordJson = json.getJSONObject("coord");
+                double lon = coordJson.getDouble("lon");
+                double lat = coordJson.getDouble("lat");
+                latLng = new LatLng(lon, lat);
+
                 weatherService.getWeatherIcon(json.getJSONArray("weather").getJSONObject(0).getString("icon"), image -> {
                     ((ImageView) findViewById(R.id.detailWeatherStateIcon)).setImageBitmap(image);
                 });
@@ -78,6 +96,28 @@ public class DetailActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }, null);
+    }
+  
+    private void bindButtonListeners() {
+        Button viewOnMapButton = findViewById(R.id.view_on_map_button);
+
+        String googleMapsPackageName = "com.google.android.apps.maps";
+        if(getPackageManager().getInstalledApplications(0).stream()
+                .noneMatch(applicationInfo -> applicationInfo.packageName.equals(googleMapsPackageName))) {
+            viewOnMapButton.setVisibility(View.INVISIBLE);
+            return;
+        }
+
+        viewOnMapButton.setOnClickListener(v -> {
+            if(latLng == null) {
+                return;
+            }
+
+            Uri googleMapsUri = Uri.parse(String.format("google.streetview:cbll=%s,%s", latLng.longitude, latLng.latitude));
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, googleMapsUri);
+            mapIntent.setPackage(googleMapsPackageName);
+            startActivity(mapIntent);
+        });
     }
 
     @Override
