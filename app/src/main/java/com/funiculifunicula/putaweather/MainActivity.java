@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        boolean accessGranted = Arrays.stream(grantResults).anyMatch(r -> r == PackageManager.PERMISSION_GRANTED);
+        boolean accessGranted = Arrays.stream(grantResults).allMatch(r -> r == PackageManager.PERMISSION_GRANTED);
 
         switch(requestCode) {
             case 1:
@@ -43,9 +43,8 @@ public class MainActivity extends AppCompatActivity {
                     errorDialog.show(getSupportFragmentManager());
                 }
 
-                break;
+                return;
             default:
-                break;
         }
     }
 
