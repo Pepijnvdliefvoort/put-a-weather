@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.Menu;
 
 import com.funiculifunicula.putaweather.dialogs.ErrorDialog;
 import com.funiculifunicula.putaweather.fragments.MapFragment;
