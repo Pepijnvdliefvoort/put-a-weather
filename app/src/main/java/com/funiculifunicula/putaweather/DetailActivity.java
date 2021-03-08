@@ -3,9 +3,14 @@ package com.funiculifunicula.putaweather;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NavUtils;
+import androidx.preference.CheckBoxPreference;
+import androidx.preference.PreferenceManager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.drawable.AnimatedVectorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -13,6 +18,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.funiculifunicula.putaweather.fragments.SettingsFragment;
 import com.funiculifunicula.putaweather.rest.openweathermap.WeatherService;
 
 import org.json.JSONException;
@@ -28,7 +34,7 @@ public class DetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar == null) {
+        if (actionBar == null) {
             return;
         }
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -72,6 +78,35 @@ public class DetailActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }, null);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        reloadImage();
+    }
+
+    private void reloadImage() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean useBackground = sharedPreferences.getBoolean(SettingsFragment.BACKGROUND_KEY, false);
+        ImageView imageView = findViewById(R.id.detailImageViewLayout);
+
+        if (!useBackground) {
+            imageView.setImageResource(0);
+            return;
+        }
+
+        String imagePathUri = sharedPreferences.getString(SettingsFragment.IMAGE_PATH_KEY, null);
+
+        if (imagePathUri == null) {
+            return;
+        }
+
+        if (imageView == null) {
+            return;
+        }
+
+        imageView.setImageURI(Uri.parse(imagePathUri));
     }
 
     @Override

@@ -80,6 +80,9 @@ public class OverviewFragment extends Fragment {
 
             WeatherService weatherService = new WeatherService((AppCompatActivity) getActivity());
 
+            if (latLngFinal == null) {
+                return;
+            }
             weatherService.requestCitiesInCircle(Double.toString(latLngFinal.latitude), Double.toString(latLngFinal.longitude), 50, json -> {
                 try {
                     JSONArray citiesJson = json.getJSONArray("list");
