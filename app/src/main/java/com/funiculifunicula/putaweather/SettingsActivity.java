@@ -8,13 +8,20 @@ import androidx.preference.Preference;
 import com.funiculifunicula.putaweather.fragments.SettingsFragment;
 
 public class SettingsActivity extends AppCompatActivity {
+    private SettingsFragment settingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getSupportFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
+        settingsFragment = new SettingsFragment();
+
+        getSupportFragmentManager().beginTransaction().replace(android.R.id.content, settingsFragment).commit();
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        settingsFragment.reloadBackgroundIcon();
+    }
 }
