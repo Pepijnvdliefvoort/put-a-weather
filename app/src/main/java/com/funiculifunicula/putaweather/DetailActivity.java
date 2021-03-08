@@ -3,22 +3,14 @@ package com.funiculifunicula.putaweather;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.preference.CheckBoxPreference;
 import androidx.preference.PreferenceManager;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.AnimatedVectorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
@@ -30,6 +22,7 @@ import com.funiculifunicula.putaweather.rest.openweathermap.WeatherService;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public class DetailActivity extends AppCompatActivity {
     private LatLng latLng;
@@ -97,19 +90,19 @@ public class DetailActivity extends AppCompatActivity {
             }
         }, null);
     }
-  
+
     private void bindButtonListeners() {
         Button viewOnMapButton = findViewById(R.id.view_on_map_button);
 
         String googleMapsPackageName = "com.google.android.apps.maps";
-        if(getPackageManager().getInstalledApplications(0).stream()
+        if (getPackageManager().getInstalledApplications(0).stream()
                 .noneMatch(applicationInfo -> applicationInfo.packageName.equals(googleMapsPackageName))) {
             viewOnMapButton.setVisibility(View.INVISIBLE);
             return;
         }
 
         viewOnMapButton.setOnClickListener(v -> {
-            if(latLng == null) {
+            if (latLng == null) {
                 return;
             }
 
