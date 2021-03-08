@@ -124,6 +124,10 @@ public class DetailActivity extends AppCompatActivity {
         boolean useBackground = sharedPreferences.getBoolean(SettingsFragment.BACKGROUND_KEY, false);
         ImageView imageView = findViewById(R.id.detailImageViewLayout);
 
+        if (imageView == null) {
+            return;
+        }
+
         if (!useBackground) {
             imageView.setImageResource(0);
             return;
@@ -132,10 +136,6 @@ public class DetailActivity extends AppCompatActivity {
         String imagePathUri = sharedPreferences.getString(SettingsFragment.IMAGE_PATH_KEY, null);
 
         if (imagePathUri == null) {
-            return;
-        }
-
-        if (imageView == null) {
             return;
         }
 
