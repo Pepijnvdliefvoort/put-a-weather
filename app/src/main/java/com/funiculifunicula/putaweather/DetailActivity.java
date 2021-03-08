@@ -2,24 +2,41 @@ package com.funiculifunicula.putaweather;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.funiculifunicula.putaweather.rest.openweathermap.WeatherService;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public class DetailActivity extends AppCompatActivity {
+    private LatLng latLng;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        bindWeatherInformation();
+        bindButtonListeners();
+    }
+
+    private void bindWeatherInformation() {
         WeatherService weatherService = new WeatherService(this);
 
         weatherService.requestCityById(getIntent().getExtras().getInt("cityId"), json -> {
             try {
+                JSONObject coordJson = json.getJSONObject("coord");
+                double lon = coordJson.getDouble("lon");
+                double lat = coordJson.getDouble("lat");
+                latLng = new LatLng(lon, lat);
+
                 weatherService.getWeatherIcon(json.getJSONArray("weather").getJSONObject(0).getString("icon"), image -> {
                     ((ImageView) findViewById(R.id.detailWeatherStateIcon)).setImageBitmap(image);
                 });
@@ -55,5 +72,19 @@ public class DetailActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }, null);
+    }
+
+    private void bindButtonListeners() {
+        Button viewOnMapButton = findViewById(R.id.view_on_map_button);
+        viewOnMapButton.setOnClickListener(v -> {
+            if(latLng == null) {
+                return;
+            }
+
+            Uri googleMapsUri = Uri.parse(String.format("google.streetview:cbll=%s,%s", latLng.longitude, latLng.latitude));
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, googleMapsUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            startActivity(mapIntent);
+        });
     }
 }
