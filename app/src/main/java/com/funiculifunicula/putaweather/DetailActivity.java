@@ -1,15 +1,23 @@
 package com.funiculifunicula.putaweather;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.funiculifunicula.putaweather.fragments.SettingsFragment;
 import com.funiculifunicula.putaweather.rest.openweathermap.WeatherService;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -23,6 +31,14 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         bindWeatherInformation();
         bindButtonListeners();
@@ -79,14 +95,14 @@ public class DetailActivity extends AppCompatActivity {
         Button viewOnMapButton = findViewById(R.id.view_on_map_button);
 
         String googleMapsPackageName = "com.google.android.apps.maps";
-        if(getPackageManager().getInstalledApplications(0).stream()
+        if (getPackageManager().getInstalledApplications(0).stream()
                 .noneMatch(applicationInfo -> applicationInfo.packageName.equals(googleMapsPackageName))) {
             viewOnMapButton.setVisibility(View.INVISIBLE);
             return;
         }
 
         viewOnMapButton.setOnClickListener(v -> {
-            if(latLng == null) {
+            if (latLng == null) {
                 return;
             }
 
@@ -95,5 +111,51 @@ public class DetailActivity extends AppCompatActivity {
             mapIntent.setPackage(googleMapsPackageName);
             startActivity(mapIntent);
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        reloadImage();
+    }
+
+    private void reloadImage() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean useBackground = sharedPreferences.getBoolean(SettingsFragment.BACKGROUND_KEY, false);
+        ImageView imageView = findViewById(R.id.detailImageViewLayout);
+
+        if (imageView == null) {
+            return;
+        }
+
+        if (!useBackground) {
+            imageView.setImageResource(0);
+            return;
+        }
+
+        String imagePathUri = sharedPreferences.getString(SettingsFragment.IMAGE_PATH_KEY, null);
+
+        if (imagePathUri == null) {
+            return;
+        }
+
+        imageView.setImageURI(Uri.parse(imagePathUri));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
