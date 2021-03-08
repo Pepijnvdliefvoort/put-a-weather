@@ -16,4 +16,5 @@
     <string name="temperature_clouds_label">Bewolkt</string>
     <string name="temperature_humidity_label">Luchtvochtigheid</string>
     <string name="clouds_label">bewolkt</string>
+    <string name="action_preferences">Instellingen</string>
 </resources>
